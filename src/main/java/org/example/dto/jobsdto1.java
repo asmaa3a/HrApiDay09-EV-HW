@@ -66,6 +66,8 @@ public class jobsdto1 {
         this.max_salary = max_salary;
     }
 
+
+
     public ArrayList<Linkdto1> getLinks() {
         return links;
     }
@@ -81,6 +83,8 @@ public class jobsdto1 {
 
     @Override
     public String toString() {
+
+
         return job_ID + ": " + job_title + ":" + min_salary +":" + max_salary;
     }
 }

@@ -1,12 +1,11 @@
-package org.example.models;
+package org.example.dto;
 
-
-import java.sql.ResultSetMetaData;
-import jakarta.ws.rs.FormParam;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-public class employee {
+public class employeeDto {
+
 
     private int employee_id;
     private String first_name;
@@ -19,18 +18,16 @@ public class employee {
     private int manager_id;
     private int department_id;
 
-    private jobs job1;
+    private jobsdto1 job2;
 
-    private employee hire2;
+    //private employeefilterDto hire1;
 
-   // private jobs hier1;
+   private ArrayList<Linkdto1> links = new ArrayList<>();
 
-
-
-    public employee() {
+    public employeeDto() {
     }
 
-    public employee(int employee_id, String first_name, String last_name, String email, String phone_number, String hire_date, int job_id, double salary, int manager_id, int department_id) {
+    public employeeDto(int employee_id, String first_name, String last_name, String email, String phone_number, String hire_date, int job_id, double salary, int manager_id, int department_id) {
         this.employee_id = employee_id;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -43,7 +40,7 @@ public class employee {
         this.department_id = department_id;
     }
 
-    public employee(ResultSet rs) throws SQLException {
+    public employeeDto(ResultSet rs) throws SQLException {
         employee_id = rs.getInt("employee_id");
         first_name = rs.getString("first_name");
         last_name = rs.getString("last_name");
@@ -54,20 +51,6 @@ public class employee {
         salary = rs.getDouble("salary");
         manager_id = rs.getInt("manager_id");
         department_id = rs.getInt("department_id");
-
-
-
-        ResultSetMetaData mt = rs.getMetaData();
-        if(mt.getColumnCount() > 10) {
-            job1 = new jobs(rs);
-
-        }
-//
-//        ResultSetMetaData mtt = rs.getMetaData();
-//        if(mtt.getColumnCount() > 10) {
-//            hier1 = new jobs(rs);
-//        }
-
     }
 
     public int getEmployee_id() {
@@ -150,21 +133,39 @@ public class employee {
         this.department_id = department_id;
     }
 
-    public jobs getJob1() {
-        return job1;
+    public jobsdto1 getJob2() {
+        return job2;
     }
 
-    public void setJob1(jobs job1) {
-        this.job1 = job1;
+    public void setJob2(jobsdto1 job2) {
+        this.job2 = job2;
     }
 
-   // public jobs getHier1() {
-     //   return hier1;
+//  public jobsdto1 getHier2() {
+//      return hier2;
+// }
+//
+// public void setHier2(jobsdto1 hier2) {
+//     this.hier2 = hier2;
+// }
+
+
+//    public employeefilterDto getHire1() {
+//        return hire1;
 //    }
 //
-//    public void setHier1(jobs hier1) {
-//        this.hier1 = hier1;
+//    public void setHire1(employeefilterDto hire1) {
+//        this.hire1 = hire1;
 //    }
+
+
+    public ArrayList<Linkdto1> getLinks() {
+        return links;
+    }
+
+    public void setLinks(ArrayList<Linkdto1> links) {
+        this.links = links;
+    }
 
     @Override
     public String toString() {
@@ -180,6 +181,13 @@ public class employee {
                 ", manager_id=" + manager_id +
                 ", department_id=" + department_id +
                 '}';
+    }
+
+    public void addLink(String url, String rel) {
+        Linkdto1 link = new Linkdto1();
+        link.setLink(url);
+        link.setRel(rel);
+        links.add(link);
     }
 }
 

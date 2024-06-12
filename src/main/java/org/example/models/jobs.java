@@ -19,7 +19,10 @@ public class jobs {
         min_salary =rs.getInt("min_salary") ;
         max_salary = rs.getInt("max_salary");
     }
-//
+
+    public jobs() {
+    }
+
     public jobs(int job_ID, String job_title, int min_salary, int max_salary) {
         this.job_ID = job_ID;
         this.job_title = job_title;

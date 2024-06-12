@@ -1,7 +1,10 @@
 package org.example.controller;
 
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.Response;
 import org.example.dao.EmployeeDAO;
+import org.example.dto.employeefilterDto;
 import org.example.models.employee;
 
 import java.util.ArrayList;
@@ -12,16 +15,6 @@ public class EmployeeController {
     EmployeeDAO dao = new EmployeeDAO();
 
     @GET
-    public ArrayList<employee> getAllempl() {
-
-        try {
-            return dao.selectAllempls();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @GET
     @Path("{employee_id}")
     public employee getemployee(@PathParam("employee_id") int employee_id) {
 
@@ -30,6 +23,27 @@ public class EmployeeController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    @GET
+    public Response getemployeehireandjob(@BeanParam employeefilterDto emp) {
+
+        GenericEntity<ArrayList<employee>> data;
+        try {
+            if(emp == null)
+            {
+                data = new GenericEntity<ArrayList<employee>>(dao.selectAllempls()){};
+
+            }
+            data = new GenericEntity<ArrayList<employee>>(dao.selectAllEmpByHAndJob(emp)){};
+
+            return Response .ok(data).build();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @DELETE

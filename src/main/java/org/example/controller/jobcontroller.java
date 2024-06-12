@@ -6,6 +6,8 @@ import jakarta.ws.rs.core.*;
 import org.example.dao.JobDAO;
 import org.example.dto.JobfilterDto;
 import org.example.dto.jobsdto1;
+import org.example.exceptions.DataNotFoundException;
+import org.example.mappers.jobMapper;
 import org.example.models.jobs;
 
 
@@ -70,19 +72,22 @@ public class jobcontroller {
     public Response getjob(@PathParam("job_ID") int job_ID) {
 
         try {
-            jobs jobs = dao.selectjobs(job_ID);
-            if (jobs == null) {
 
+            jobs jobs = dao.selectjobs(job_ID);
+
+            if (jobs == null) {
+                throw new DataNotFoundException("jobs"+job_ID+"ClassNotFoundException");
             }
-            jobsdto1 dto = new jobsdto1();
-            dto.setJob_ID(jobs.getJob_ID());
-            dto.setJob_title(jobs.getJob_title());
-            dto.setMin_salary(jobs.getMin_salary());
+//            jobsdto1 dto = new jobsdto1();
+//            dto.setJob_ID(jobs.getJob_ID());
+//            dto.setJob_title(jobs.getJob_title());
+//            dto.setMin_salary(jobs.getMin_salary());
+            jobsdto1 dto = jobMapper.INSTANCE.tojobDto(jobs);
 
             addLinks(dto);
 
             return Response.ok(dto).build();
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -107,14 +112,35 @@ public class jobcontroller {
     //   } catch (Exception e) {
     //      throw new RuntimeException(e);
     ///  }
+//    @POST
+//    @Consumes(MediaType.APPLICATION_XML)
+//    public Response insertjob(jobs j) {
+//
+//        try {
+//            dao.insertjobs(j);
+//            NewCookie cookie = (new NewCookie("username", "OOOOO"));
+//            URI uri = uriInfo.getAbsolutePathBuilder().path(j.getJob_ID() + "").build();
+//            return Response
+////                    .status(Response.Status.CREATED)
+//                    .created(uri)
+////                    .cookie(new NewCookie("username", "OOOOO"))
+//                    .cookie(cookie)
+//                    .header("Created by", "Wael")
+//                    .build();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    public Response insertjob(jobs j) {
+    public Response insertjob(jobsdto1 dto) {
 
         try {
-            dao.insertjobs(j);
+            jobs model = jobMapper.INSTANCE.toModel(dto);
+            dao.insertjobs(model);
             NewCookie cookie = (new NewCookie("username", "OOOOO"));
-            URI uri = uriInfo.getAbsolutePathBuilder().path(j.getJob_ID() + "").build();
+            URI uri = uriInfo.getAbsolutePathBuilder().path(dto.getJob_ID() + "").build();
             return Response
 //                    .status(Response.Status.CREATED)
                     .created(uri)
